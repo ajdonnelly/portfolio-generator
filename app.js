@@ -2,12 +2,26 @@
 /*The require statement is a built-in function that's globally available in 
 Node.js. It allows the app.js file to access the fs module's functions through 
 the fs assignment.*/
-const fs = require('fs');
+
+// const fs = require('fs');
+const inquirer = require('inquirer');
+inquirer
+  .prompt([
+    {
+      type: 'input',
+      name: 'name',
+      message: 'What is your name?'
+    }
+  ])
+  .then(answers => console.log(answers));
 
 /*because we added the module.exports statement at the end of the page-template.js 
 file (with module.exports set to our generatePage() function), we can now use 
 the require statement to include generatePage() at the top of the app.js file.*/
-const generatePage = require('./src/page-template.js');
+
+// const generatePage = require('./src/page-template.js');
+
+// const pageHTML = generatePage(portfolioData);
 
 /* process is a global object that represents everything going on with this particular app.
  The argv property of process is an array that holds exactly 
@@ -22,11 +36,11 @@ const generatePage = require('./src/page-template.js');
  /*used the array method .slice() to return a brand-new array 
  based on process.argv starting at the third index (i.e., index 2 in the zero-based array), 
  and ending with the final index.*/
-const profileDataArgs = process.argv.slice(2);
+// const profileDataArgs = process.argv.slice(2);
 
 /*assignment destructuring. In basic terms, it assigns elements of an array 
 to variable names in a single expression,*/
-const [name, github] = profileDataArgs;
+// const [name, github] = profileDataArgs;
 
 // // Notice the lack of parentheses around the `profileDataArr` parameter?
 // const printProfileData = profileDataArr => {
@@ -47,8 +61,9 @@ const [name, github] = profileDataArgs;
 output file. The second argument is the data that's being written: the 
 HTML string template. The third argument is the callback function that will 
 handle any errors as well as the success message.*/
-  fs.writeFile('./index.html', generatePage(name, github), err => {
-    if (err) throw new err;
-  
-    console.log('Portfolio complete! Check out index.html to see the output!');
-  });
+
+// fs.writeFile('./index.html', pageHTML, err => {
+//   if (err) throw new Error(err);
+
+//   console.log('Portfolio complete! Check out index.html to see the output!');
+// });
