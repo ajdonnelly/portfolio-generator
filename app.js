@@ -5,15 +5,104 @@ the fs assignment.*/
 
 // const fs = require('fs');
 const inquirer = require('inquirer');
-inquirer
-  .prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'What is your name?'
-    }
-  ])
-  .then(answers => console.log(answers));
+// Notice that the function returns a running of inquire.prompt(), thus returning what it returns, which is a Promise. Just like fetch(), which we covered previously, the Promise will resolve with a .then() method.
+
+/* So, here we're calling a function that returns the result of inquire.prompt, 
+which is a Promise. We therefore append the .then() method to the function call, 
+since it returns a Promise, and we put into .then() whatever we wish to take place 
+after the Promise is resolved.*/
+//these are the prompt user questions: 
+const promptUser = () => {
+    return inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is your name?'
+      },
+
+      {
+        type: 'input',
+        name: 'github',
+        message: 'What is your GitHub account name?'
+      },
+
+      {
+        type: 'input',
+        name: 'about',
+        message: 'Provide some information about yourself:'
+      },
+
+
+
+    ]);
+  };
+  
+
+//   these are the prompt project questions
+  const promptProject = portfolioData => {
+    // If there's no 'projects' array property, create one
+if (!portfolioData.projects) {
+    portfolioData.projects = [];
+  }
+    console.log(`
+  =================
+  Add a New Project
+  =================
+  `);
+    return inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the name of your project?'
+      },
+      {
+        type: 'input',
+        name: 'description',
+        message: 'Provide a description of the project (Required)'
+      },
+      {
+        type: 'checkbox',
+        name: 'languages',
+        message: 'What did you this project with? (Check all that apply)',
+        choices: ['JavaScript', 'HTML', 'CSS', 'ES6', 'jQuery', 'Bootstrap', 'Node']
+      },
+      {
+        type: 'input',
+        name: 'link',
+        message: 'Enter the GitHub link to your project. (Required)'
+      },
+      {
+        type: 'confirm',
+        name: 'feature',
+        message: 'Would you like to feature this project?',
+        default: false
+      },
+      {
+        type: 'confirm',
+        name: 'confirmAddProject',
+        message: 'Would you like to enter another project?',
+        default: false
+      }
+    ]).then(projectData => {
+        portfolioData.projects.push(projectData);
+        if (projectData.confirmAddProject) {
+          return promptProject(portfolioData);
+        } else {
+          return portfolioData;
+        }
+      });
+    
+  };
+  //run prompt user
+  promptUser()
+  //show prompt user answers
+  .then(promptProject)
+  //run project questions 
+  .then(portfolioData => {
+    console.log(portfolioData);
+    });
+  //show project question answers
+//   .then(projectAnswers => console.log(projectAnswers));
 
 /*because we added the module.exports statement at the end of the page-template.js 
 file (with module.exports set to our generatePage() function), we can now use 
