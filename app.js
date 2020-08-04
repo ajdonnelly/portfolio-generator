@@ -3,7 +3,7 @@
 Node.js. It allows the app.js file to access the fs module's functions through 
 the fs assignment.*/
 
-// const fs = require('fs');
+const fs = require('fs');
 const inquirer = require('inquirer');
 // Notice that the function returns a running of inquire.prompt(), thus returning what it returns, which is a Promise. Just like fetch(), which we covered previously, the Promise will resolve with a .then() method.
 
@@ -129,6 +129,7 @@ if (!portfolioData.projects) {
         message: 'Would you like to enter another project?',
         default: false
       }
+
     ]).then(projectData => {
         portfolioData.projects.push(projectData);
         if (projectData.confirmAddProject) {
@@ -145,7 +146,13 @@ if (!portfolioData.projects) {
   .then(promptProject)
   //run project questions 
   .then(portfolioData => {
-    console.log(portfolioData);
+       const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
     });
   //show project question answers
 //   .then(projectAnswers => console.log(projectAnswers));
@@ -154,7 +161,7 @@ if (!portfolioData.projects) {
 file (with module.exports set to our generatePage() function), we can now use 
 the require statement to include generatePage() at the top of the app.js file.*/
 
-// const generatePage = require('./src/page-template.js');
+const generatePage = require('./src/page-template.js');
 
 // const pageHTML = generatePage(portfolioData);
 
