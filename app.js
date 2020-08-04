@@ -3,15 +3,22 @@
 Node.js. It allows the app.js file to access the fs module's functions through 
 the fs assignment.*/
 
-const fs = require('fs');
+// const fs = require('fs');
+
 const inquirer = require('inquirer');
+const generatePage = require('./src/page-template.js');
+const { writeFile, copyFile } = require('./utils/generate-site');
+
+
 // Notice that the function returns a running of inquire.prompt(), thus returning what it returns, which is a Promise. Just like fetch(), which we covered previously, the Promise will resolve with a .then() method.
 
 /* So, here we're calling a function that returns the result of inquire.prompt, 
 which is a Promise. We therefore append the .then() method to the function call, 
 since it returns a Promise, and we put into .then() whatever we wish to take place 
 after the Promise is resolved.*/
-//these are the prompt user questions: 
+
+
+//We start by asking the user for their information with Inquirer prompts; this returns all of the data as an object in a Promise.
 const promptUser = () => {
     return inquirer.prompt([
         {
@@ -140,20 +147,26 @@ if (!portfolioData.projects) {
       });
     
   };
-  //run prompt user
+
+
   promptUser()
-  //show prompt user answers
   .then(promptProject)
-  //run project questions 
   .then(portfolioData => {
-       const pageHTML = generatePage(portfolioData);
-
-    fs.writeFile('./index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-
-      console.log('Page created! Check out index.html in this directory to see it!');
-    });
-    });
+    return generatePage(portfolioData);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .then(writeFileResponse => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then(copyFileResponse => {
+    console.log(copyFileResponse);
+  })
+  .catch(err => {
+    console.log(err);
+  });
   //show project question answers
 //   .then(projectAnswers => console.log(projectAnswers));
 
@@ -161,7 +174,7 @@ if (!portfolioData.projects) {
 file (with module.exports set to our generatePage() function), we can now use 
 the require statement to include generatePage() at the top of the app.js file.*/
 
-const generatePage = require('./src/page-template.js');
+
 
 // const pageHTML = generatePage(portfolioData);
 
